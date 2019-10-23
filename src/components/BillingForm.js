@@ -4,6 +4,7 @@ import { CardElement, injectStripe } from 'react-stripe-elements';
 import LoaderButton from './LoaderButton';
 import { useFormFields } from '../libs/hooksLib';
 import "./BillingForm.css"
+import { validate } from '@babel/types';
 
 function BillingForm({ isLoading, onSubmit, ...props }) {
     const [fields, handleFieldChange] = useFormFields({
@@ -41,6 +42,33 @@ function BillingForm({ isLoading, onSubmit, ...props }) {
                 placeholder='Number of notes to store'
             />
         </FormGroup>
-        <h
+        <hr />
+        <FormGroup bsSize='large' controlId='name'>
+            <FormControl
+                type='text'
+                value={fields.name}
+                onChange={handleFieldChange}
+                placeholder='name on the card'
+            />
+        </FormGroup>
+        <ControlLabel>Credit Card Info</ControlLabel>
+        <CardElement
+            className='card-field'
+            onChange={e => setIsCardComplete(e.complete)}
+            style={{
+                base: { fontSize: '18px', fontFamily: '"Open Sans", sans-serif' }
+            }}
+        />
+        <LoaderButton
+            block
+            type='submit'
+            bsSize="large"
+            isLoading={isLoading}
+            disabled={!validateForm()}
+        >
+            Purchase
+        </LoaderButton>
     </form>
 }
+
+export default injectStripe(BillingForm);
